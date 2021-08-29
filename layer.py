@@ -9,6 +9,14 @@ from enum import Enum
 
 class Layer(Enum):
     UP = 0
+    DOWN = 2
+    LEFT = 4
+    RIGHT = 6
+    FRONT = 8
+    BACK = 10
+
+class Turn(Enum):
+    UP = 0
     UP_PRIME = 1
     DOWN = 2
     DOWN_PRIME = 3
@@ -20,3 +28,23 @@ class Layer(Enum):
     FRONT_PRIME = 9
     BACK = 10
     BACK_PRIME = 11
+    
+    def toLayer(turn):
+        """
+        converts a Turn to the Layer the turn happens on
+
+        Parameters
+        ----------
+        turn : Turn
+            The turn to be converted
+
+        Returns
+        -------
+        Layer
+            The layer that would be turned.
+
+        """
+        if turn.value % 2 == 0:
+            return Layer(turn.value)
+        else:
+            return Layer(turn.value - 1)

@@ -5,9 +5,13 @@ Created on Thu Aug 26 21:53:28 2021
 @author: jphei
 """
 
-from vpython import compound,quad,color,vec,vertex,scene
+from vpython import compound,quad,color,vec,vertex
+from layer import Layer, Turn
 
 class CubeRender():
+
+    origin = vec(0,0,0)
+    
 
     def __init__(self):
         """
@@ -49,16 +53,73 @@ class CubeRender():
         by = make_piece_wrapper([color.blue, color.yellow])
         y = make_piece_wrapper([color.yellow])
         
-        self.pieces = [brw, rw, grw, gw, gow, ow, bow, bw, w,
+        self.pieces_list = [brw, rw, grw, gw, gow, ow, bow, bw, w,
                   br, r, rg, g, go, o, bo, b,
                   bry, ry, gry, gy, goy, oy, boy, by, y]
 
-U_Vs = [vec(-.5,.5,-.5),vec(.5,.5,-.5),vec(.5,.5,.5),vec(-.5,.5,.5)]
-D_Vs = [x + vec(0,-1,0) for x in U_Vs]
-L_Vs = [vec(-.5,.5,-.5),vec(-.5,.5,.5),vec(-.5,-.5,.5),vec(-.5,-.5,-.5)]
-R_Vs = [x + vec(1,0,0) for x in L_Vs]
-F_Vs = [vec(-.5,.5,.5),vec(.5,.5,.5),vec(.5,-.5,.5),vec(-.5,-.5,.5)]
-B_Vs = [x + vec(0,0,-1) for x in F_Vs]
+    def do_turn(self, turn):
+        """
+        rotates a layer of the cube around the origin
+
+        Parameters
+        ----------
+        turn : layer.Turn
+            what layer should be rotated and in which direction
+
+        Returns
+        -------
+        None.
+
+        """
+        layer = Turn.toLayer(turn)
+        turning_pieces = [piece for piece in self.pieces_list
+                          if self._isOnLayer(piece, layer)]
+        self._turn_rotate(turning_pieces, turn)
+    
+    # !!!
+    def _isOnLayer(piece, turn):
+        """
+        returns True
+
+        Parameters
+        ----------
+        piece : vpython.vpython.compound
+            A piece of the rubik's cube
+        turn : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        Boolean
+
+        """
+        pass
+    
+    # !!!
+    def _turn_rotate(self, turn_pieces, layer):
+        """
+        rotates turn_pieces around the origin 
+
+        Parameters
+        ----------
+        turn_pieces : [vpthon.vpython.compound]
+            the pieces to be turned
+        layer : Layer
+            What layer to turn, and in what direction
+
+        Returns
+        -------
+        None.
+
+        """
+        pass
+
+U_Vs = (vec(-.5,.5,-.5),vec(.5,.5,-.5),vec(.5,.5,.5),vec(-.5,.5,.5))
+D_Vs = tuple(x + vec(0,-1,0) for x in U_Vs)
+L_Vs = (vec(-.5,.5,-.5),vec(-.5,.5,.5),vec(-.5,-.5,.5),vec(-.5,-.5,-.5))
+R_Vs = tuple(x + vec(1,0,0) for x in L_Vs)
+F_Vs = (vec(-.5,.5,.5),vec(.5,.5,.5),vec(.5,-.5,.5),vec(-.5,-.5,.5))
+B_Vs = tuple(x + vec(0,0,-1) for x in F_Vs)
 
 def make_quad(vectors, color):
     return quad(vs=[vertex(pos=vector,color=color) for vector in vectors])
@@ -89,4 +150,4 @@ def _color2vectors(c):
     if c == color.blue: return B_Vs
 
 
-
+cubeRender = CubeRender()

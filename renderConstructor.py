@@ -7,7 +7,6 @@ Created on Thu Aug 26 14:00:02 2021
 
 from vpython import vertex,vec,quad,color,compound,radians
 
-D90 = radians(90) # 90 degrees in radians
 ORIGIN = vec(1.5,1.5,1.5)
 
 X_AXIS = vec(1,0,0)
