@@ -7,6 +7,14 @@ Created on Sun Aug 29 13:51:33 2021
 
 from enum import Enum
 
+class Color(Enum):
+    WHITE = 0
+    YELLOW = 2
+    ORANGE = 4
+    RED = 6
+    GREEN = 8
+    BACK = 10
+
 class Layer(Enum):
     UP = 0
     DOWN = 2

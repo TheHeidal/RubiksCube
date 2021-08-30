@@ -6,7 +6,7 @@ Created on Thu Aug 26 21:53:28 2021
 """
 
 from vpython import compound,quad,color,vec,vertex,radians
-from layer import Layer, Turn
+from cubeEnum import Layer, Turn
 
 class CubeRender():
 
@@ -62,7 +62,7 @@ class CubeRender():
 
         Parameters
         ----------
-        turn : layer.Turn
+        turn : cubeEnum.Turn
             what layer should be rotated and in which direction
 
         Returns
@@ -84,7 +84,7 @@ class CubeRender():
         ----------
         piece : vpython.vpython.compound
             A piece of the rubik's cube
-        layer : layer.Layer
+        layer : cubeEnum.Layer
             The layer the piece should be on
 
         Returns
@@ -115,7 +115,7 @@ class CubeRender():
         ----------
         turn_pieces : [vpthon.vpython.compound]
             the pieces to be turned
-        turn: layer.Turn
+        turn: cubeEnum.Turn
             What layer to turn, and in what direction
 
         Returns

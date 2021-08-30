@@ -5,11 +5,14 @@ Created on Thu Aug 26 20:15:46 2021
 @author: jphei
 """
 
-import vpython
 import constructor2
+import cubeEnum
 
 class RubiksCube():
-    """A representation of a Rubik's Cube"""
+    """
+    A representation of a Rubik's Cube
+    A cube is represented by a 6-tuple of 9-tuples of cubeEnum.Color
+    """
     # The cube is represented by a collection of pieces
     
     # !!! TODO
