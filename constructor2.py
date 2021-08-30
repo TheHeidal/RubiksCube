@@ -5,13 +5,12 @@ Created on Thu Aug 26 21:53:28 2021
 @author: jphei
 """
 
-from vpython import compound,quad,color,vec,vertex
+from vpython import compound,quad,color,vec,vertex,radians
 from layer import Layer, Turn
 
 class CubeRender():
 
-    origin = vec(0,0,0)
-    
+    ORIGIN = vec(0,0,0)
 
     def __init__(self):
         """
@@ -22,7 +21,6 @@ class CubeRender():
         None.
 
         """
-        
         # D layer
         brw = make_piece_wrapper([color.blue, color.red, color.white])
         rw = make_piece_wrapper([color.red, color.white])
@@ -57,7 +55,8 @@ class CubeRender():
                   br, r, rg, g, go, o, bo, b,
                   bry, ry, gry, gy, goy, oy, boy, by, y]
 
-    def do_turn(self, turn):
+
+    def doTurn(self, turn):
         """
         rotates a layer of the cube around the origin
 
@@ -73,30 +72,42 @@ class CubeRender():
         """
         layer = Turn.toLayer(turn)
         turning_pieces = [piece for piece in self.pieces_list
-                          if self._isOnLayer(piece, layer)]
+                          if CubeRender._isOnLayer(piece, layer)]
         self._turn_rotate(turning_pieces, turn)
     
     # !!!
-    def _isOnLayer(piece, turn):
+    def _isOnLayer(piece, layer):
         """
-        returns True
+        returns True if the piece is currently on the layer
 
         Parameters
         ----------
         piece : vpython.vpython.compound
             A piece of the rubik's cube
-        turn : TYPE
-            DESCRIPTION.
+        layer : layer.Layer
+            The layer the piece should be on
 
         Returns
         -------
         Boolean
 
         """
-        pass
+        if layer == Layer.UP:
+            return piece.pos.y > 0.5
+        elif layer == Layer.DOWN:
+            return piece.pos.y < -0.5
+        elif layer == Layer.LEFT:
+            return piece.pos.x < -0.5
+        elif layer == Layer.RIGHT:
+            return piece.pos.x > 0.5
+        elif layer == Layer.FRONT:
+            return piece.pos.z > 0.5
+        elif layer == Layer.BACK:
+            return piece.pos.z < -0.5
+        else: raise NotImplementedError(layer.name + ' is not implemented')
     
     # !!!
-    def _turn_rotate(self, turn_pieces, layer):
+    def _turn_rotate(self, turn_pieces, turn):
         """
         rotates turn_pieces around the origin 
 
@@ -104,7 +115,7 @@ class CubeRender():
         ----------
         turn_pieces : [vpthon.vpython.compound]
             the pieces to be turned
-        layer : Layer
+        turn: layer.Turn
             What layer to turn, and in what direction
 
         Returns
@@ -112,8 +123,28 @@ class CubeRender():
         None.
 
         """
-        pass
+        layer = Turn.toLayer(turn)
+        if layer == Layer.UP:
+            axis = vec(0,1,0)
+        elif layer == Layer.DOWN:
+            axis = vec(0,-1,0)
+        elif layer == Layer.LEFT:
+            axis = vec(-1,0,0)
+        elif layer == Layer.RIGHT:
+            axis = vec(1,0,0)
+        elif layer == Layer.FRONT:
+            axis = vec(0,0,1)
+        elif layer == Layer.BACK:
+            axis = vec(0,0,-1)
+        else: raise NotImplementedError(layer.name + ' is not implemented')
+        angle = radians(90 - (180 * (turn.value % 2))) # should mean turns are 90deg and prime turns are -90 deg
+        for x in turn_pieces:
+            x.rotate(angle, axis, self.ORIGIN)
+            
+            
+    
 
+# !!! should probably move this into the class
 U_Vs = (vec(-.5,.5,-.5),vec(.5,.5,-.5),vec(.5,.5,.5),vec(-.5,.5,.5))
 D_Vs = tuple(x + vec(0,-1,0) for x in U_Vs)
 L_Vs = (vec(-.5,.5,-.5),vec(-.5,.5,.5),vec(-.5,-.5,.5),vec(-.5,-.5,-.5))
@@ -124,7 +155,6 @@ B_Vs = tuple(x + vec(0,0,-1) for x in F_Vs)
 def make_quad(vectors, color):
     return quad(vs=[vertex(pos=vector,color=color) for vector in vectors])
 
-# !!! rewrite to produce an object that includes information about what side has what color
 # !!! make sure doc mentions it positions piece
 def make_piece(colors, sides):
     piece = compound([make_quad(vectors, color) for (vectors, color) in zip(sides, colors)])
